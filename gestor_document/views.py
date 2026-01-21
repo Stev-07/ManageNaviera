@@ -20,6 +20,7 @@ def create_BOL(request, idscale, idrut):
         })
     else:
       ruta = get_object_or_404(Ruta, pk = idrut)
+      escala = get_object_or_404(Escala, pk = idscale)
       buque = ruta.nave
       nave = get_object_or_404(Nave, pk = buque.id)
       form = documentoForm(request.POST)
@@ -28,7 +29,7 @@ def create_BOL(request, idscale, idrut):
       if form.is_valid():
           document = form.save(commit=False)
           document.nombreBuque = nave.nombre
-          document.escala = idscale
+          document.escala = escala
           document.save()
           return redirect('viaje_scale', idrut)
       else:

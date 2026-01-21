@@ -61,7 +61,10 @@ class Documento(models.Model):
         choices=[('pendiente', 'Pendiente'), ('revisado', 'Revisado')],
         default= 'pendiente'
     )
-    infoVendedor = models.CharField(max_length=200)
+    infovendedor = models.CharField(max_length=200)
     escala = models.ForeignKey(Escala, on_delete=models.CASCADE, related_name='documentos')
+
+    def __str__(self):
+        return f"{self.tipo} - #{self.id}"
 
 

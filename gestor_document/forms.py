@@ -18,5 +18,5 @@ class escalaForm(forms.ModelForm):
 class documentoForm(forms.ModelForm):
     class Meta:
         model = Documento
-        fields = ['tipo', 'infoVendedor']
+        fields = ['tipo', 'infovendedor']
 
