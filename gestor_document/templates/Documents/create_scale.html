@@ -1,7 +1,16 @@
 {% extends 'layouts/navbar.html' %}
-
+{% load crispy_forms_tags %}
 {% block content %}
 
-<h1>de momento hola</h1>
+<div>
+    <h4>Escala</h4>
+    <form method="post">
+            {% csrf_token %}
+            {{form|crispy}}
+            <button>
+                save
+            </button>
+    </form>
+</div>
 
 {% endblock %}

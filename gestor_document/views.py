@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse,JsonResponse
 from django.contrib import messages
-from .forms import billOfLading, viajeForm, documentoForm
+from .forms import billOfLading, viajeForm, documentoForm, escalaForm
 from .models import Escala, Ruta, Nave
 
 # Create your views here.
@@ -72,7 +72,26 @@ def viaje_scale(request, id):
 
 
 def create_scale(request, idrut):
-    return render (request, './Documents/create_scale.html')
+    if request.method == 'POST':
+        form = escalaForm(request.POST)
+        ruta = get_object_or_404(Ruta, pk = idrut)
+        if form.is_valid():
+            escala = form.save(commit=False)
+            escala.ruta = ruta
+            escala.save()
+            print("guardado escala")
+            return redirect('viaje_scale', id = idrut)
+        else:
+            print(form.errors)
+            return HttpResponse("algo fallo")
+    else:
+        form = escalaForm()        
+        context = {
+            'idrut' : idrut, 
+            'form' : form,
+        }
+        return render(request, './Documents/create_scale.html', context)
+
 
 
 
