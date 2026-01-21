@@ -1,0 +1,13 @@
+{% extends 'layouts/navbar.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div>
+    <form method="post">
+        {% csrf_token %}
+        {{form|crispy}}
+        <button>
+            save
+        </button>
+    </form>
+</div>
+{% endblock %}

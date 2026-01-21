@@ -1,0 +1,42 @@
+{% extends 'layouts/navbar.html' %}
+
+{% block content %}
+
+<div class="contenedor">
+    <h1>Viaje </h1>
+
+    {% if scales %}
+
+        <div class="viaje_scales">
+            {% for scale in scales %}
+                <div class="escala" data-id="{{scale.id}}">
+                    <div class="data-escala">
+                        <div class="text-escala">
+                            <p>escala #{{scale.id}} <br></p>
+                            <p>destino: {{scale.puertoDestino}} <br></p>
+                        </div>
+                        <div class="buttons_escala">
+                            <button class="btn_add_document" onclick="window.location.href='/create_bol/{{scale.id}}/{{idrut}}/'">
+                                añadir documento
+                            </button>
+                            <button>
+                                ver documentos 
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    
+    {% endif %}
+    
+
+    <div class="btn_scale">
+        <button onclick="window.location.href='/create_scale/{{idrut}}/'">
+            añadir escala
+        </button>
+    </div>
+</div>
+
+{% endblock %}
