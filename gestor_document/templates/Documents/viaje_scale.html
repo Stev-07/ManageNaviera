@@ -1,4 +1,8 @@
 {% extends 'layouts/navbar.html' %}
+{% load static %}
+<head>
+    <link rel="stylesheet" href="../../static/styles/styles.css">
+</head>
 
 {% block content %}
 
@@ -16,13 +20,13 @@
                             <p>destino: {{scale.puertoDestino}} <br></p>
                         </div>
                         <div class="buttons_escala">
-                            <button class="btn_add_document" onclick="window.location.href='/create_bol/{{scale.id}}/{{idrut}}/'">
+                            <button class="add_document" onclick="window.location.href='/create_bol/{{scale.id}}/{{idrut}}/'">
                                 añadir documento
                             </button>
-                            <button>
+                            <button class="btn_add_pdf">
                                 subir pdf
                             </button>
-                            <button>
+                            <button class="btn_view_document">
                                 ver documentos 
                             </button>
 
