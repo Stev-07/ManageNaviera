@@ -1,0 +1,16 @@
+{% extends 'layouts/navbar.html' %}
+{% block content %}
+{% load crispy_forms_tags %}
+
+<div>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{form|crispy}}
+
+        <button type="submit">
+            subir pdf
+        </button>
+    </form>
+</div>
+
+{% endblock %}

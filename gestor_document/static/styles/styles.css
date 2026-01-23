@@ -48,7 +48,9 @@
 
 /* Estilo base para todos los botones */
 .buttons_escala button,
-.btn_scale button {
+.btn_scale button,
+.btn_save_ruta button,
+.btn_cancel_ruta button {
     padding: 10px 15px;
     border: none;
     border-radius: 6px;
@@ -85,9 +87,15 @@
 }
 
 /* Botón para añadir escala */
-.btn_scale {
+.btn_scale, .btn_cancel_ruta, .btn_save_ruta {
     margin-top: 20px;
     text-align: center;
+}
+.btn_cancel_ruta{
+    background: #be2311; 
+}
+.btn_save_ruta{
+    background: #28a745; 
 }
 .btn_scale button {
     background: #17a2b8; 

@@ -67,4 +67,24 @@ class Documento(models.Model):
     def __str__(self):
         return f"{self.tipo} - #{self.id}"
 
+ #modelos para docs pdf   
+class TipoDocumento(models.TextChoices):
+    BILLOFLADING = 'BILL', 'BillOfLading'
+    MANIFIESTO_DE_CARGA = 'MANIFIESTO', 'Manifiesto de carga'
+    CERTIFICADO_DE_ORIGEN = 'CERTIFICADO', 'Certificado de origen'
+
+class EstadoDocumento(models.TextChoices):
+    PERNDIENTE = 'pendiente', 'Pendiente'
+    REVISADO = 'revisado', 'Revisado'
+    
+class Documento_pdf(models.Model):
+    nombre = models.CharField(max_length=200)
+    tipo = models.CharField(max_length=11, choices=TipoDocumento.choices)
+    archivo = models.FileField(upload_to='documentos/')
+    creado = models.DateTimeField(auto_now_add=True)
+    estado = models.CharField(max_length=10, choices=EstadoDocumento.choices, db_default=EstadoDocumento.PERNDIENTE)
+    escala = models.ForeignKey(Escala, on_delete=models.CASCADE, related_name='documentospdf')
+
+    def __str__(self):
+        return f"{self.nombre} - {self.tipo}"
 

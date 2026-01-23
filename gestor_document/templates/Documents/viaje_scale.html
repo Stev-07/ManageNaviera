@@ -23,7 +23,7 @@
                             <button class="add_document" onclick="window.location.href='/create_bol/{{scale.id}}/{{idrut}}/'">
                                 añadir documento
                             </button>
-                            <button class="btn_add_pdf">
+                            <button class="btn_add_pdf" onclick="window.location.href='/upload_pdf/{{scale.id}}/{{idrut}}/'">
                                 subir pdf
                             </button>
                             <button class="btn_view_document">
@@ -42,6 +42,12 @@
     <div class="btn_scale">
         <button onclick="window.location.href='/create_scale/{{idrut}}/'">
             añadir escala
+        </button>
+        <button class="btn_save_ruta">
+            guardar y salir
+        </button>
+        <button class="btn_cancel_ruta">
+            cancelar
         </button>
     </div>
 </div>

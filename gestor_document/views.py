@@ -1,17 +1,15 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse,JsonResponse
 from django.contrib import messages
-from .forms import billOfLading, viajeForm, documentoForm, escalaForm
+from .forms import billOfLading, viajeForm, documentoForm, escalaForm, documentopdfForm
 from .models import Escala, Ruta, Nave
 
 # Create your views here.
 def helloWorld(request):
     return render(request, 'index.html')
 
-def segudoHello(request):
-    return HttpResponse("about you, i love everything")    
-
-#esta parte van los documentos, de momento es un ejemplo
+#esta parte van los documentos, de momento es un ejemplo que puede extenderse al numero de documentos que se necesite
+#en este caso son 3, pero solo cree un form para funcionamiento
 def create_BOL(request, idscale, idrut):
     if request.method == 'GET':
         form = billOfLading()
@@ -69,8 +67,6 @@ def viaje_scale(request, id):
     else:
         return HttpResponse("en proceso")
 
-
-
 def create_scale(request, idrut):
     if request.method == 'POST':
         form = escalaForm(request.POST)
@@ -92,6 +88,21 @@ def create_scale(request, idrut):
         }
         return render(request, './Documents/create_scale.html', context)
 
+def upload_pdf(request, idscale, idrut):
+    if request.method == 'POST':
+        escala = get_object_or_404(Escala, pk = idscale)
+        form = documentopdfForm(request.POST, request.FILES)
+        if form.is_valid():
+            pdf = form.save(commit=False)
+            pdf.escala = escala
+            pdf.save()
+            return redirect('viaje_scale', idrut)
+        else:
+            print(form.errors)
+            return HttpResponse("fallo algo")
+    else:
+        form = documentopdfForm()
+        return render(request, './Documents/upload_pdf.html', {'form': form} )
 
 
 

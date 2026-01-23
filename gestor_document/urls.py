@@ -8,4 +8,5 @@ urlpatterns = [
     path('create_bol/<int:idscale>/<int:idrut>/', views.create_BOL, name='bill'),
     path('create_scale/<int:idrut>/', views.create_scale, name='scale'),
     path('viaje_scale/<int:id>/', views.viaje_scale, name='viaje_scale'),
+    path('upload_pdf/<int:idscale>/<int:idrut>/', views.upload_pdf, name= 'pdf'),
 ]
