@@ -1,11 +1,7 @@
 from django.db import models
 from datetime import date
+from django.contrib.auth.models import User
 # Create your models here.
-class Meta:
-    permissions = [
-        ("puede_crear_documentos", "puede crear documentos"),
-        ("puede_revisar_documentos", "puede revisar documentos"),
-    ]
 
 class Puerto(models.Model):
     nombre = models.CharField(max_length=200)
@@ -53,6 +49,11 @@ class Escala(models.Model):
         return f"Puerto Destino: {self.puertoDestino}"
 
 class Documento(models.Model):
+    class Meta:
+        permissions = [
+        ("puede_crear_documentos", "puede crear documentos"),
+        ("puede_revisar_documentos", "puede revisar documentos"),
+        ]
     #este tipo debio haber sido tipo choice
     tipo = models.CharField(max_length=200)
     nombreBuque = models.CharField(max_length=200)
@@ -78,6 +79,12 @@ class EstadoDocumento(models.TextChoices):
     REVISADO = 'revisado', 'Revisado'
     
 class Documento_pdf(models.Model):
+    #este class meta no era necesario, lo puse por error
+    class Meta:
+        permissions = [
+        ("puede_crear_documentos", "puede crear documentos"),
+        ("puede_revisar_documentos", "puede revisar documentos"),
+        ]
     nombre = models.CharField(max_length=200)
     tipo = models.CharField(max_length=11, choices=TipoDocumento.choices)
     archivo = models.FileField(upload_to='documentos/')
@@ -88,3 +95,12 @@ class Documento_pdf(models.Model):
     def __str__(self):
         return f"{self.nombre} - {self.tipo}"
 
+class perfilUser(models.Model):
+        user = models.OneToOneField(User, on_delete=models.CASCADE)
+        #si es naviero se deja en blancp
+        puerto = models.ForeignKey(Puerto, on_delete=models.CASCADE, blank=True, null=True)
+
+        def __str__(self):
+            return f"{self.user.username}"
+    
+    

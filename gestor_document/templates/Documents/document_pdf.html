@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <style>
+        body {
+            font-family: serif;
+            margin: 2cm;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .contenido {
+            white-space: pre-wrap;
+            text-align: justify;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>{{ documento.tipo }} - {{documento.pk}}</h1>
+
+    <div class="contenido">
+        <p>Buque : {{documento.nombreBuque}}</p>
+        <p>estado : {{documento.infovendedor}}</p>
+        <p>estado : {{documento.estado}}</p>
+    </div>
+</body>
+
+</html>

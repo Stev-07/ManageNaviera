@@ -7,3 +7,4 @@ en un puerto, el encargado del puerto podrá consultar los documentos, pudiendo 
 la validez de los mismos
 
 Areas de mejora: 
+1.Datos olvidados (nombre de documento en modelo)

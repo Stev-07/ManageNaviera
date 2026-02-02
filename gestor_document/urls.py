@@ -9,4 +9,6 @@ urlpatterns = [
     path('create_scale/<int:idrut>/', views.create_scale, name='scale'),
     path('viaje_scale/<int:id>/', views.viaje_scale, name='viaje_scale'),
     path('upload_pdf/<int:idscale>/<int:idrut>/', views.upload_pdf, name= 'pdf'),
+    path('view_document/<int:idscale>/<int:idrut>/<int:iddoc>/', views.view_pdf, name='view_pdf'),
+    path('pdf/<int:iddoc>/', views.download_to_pdf, name='download_to_pdf'),
 ]

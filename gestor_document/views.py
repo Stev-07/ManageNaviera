@@ -2,7 +2,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse,JsonResponse
 from django.contrib import messages
 from .forms import billOfLading, viajeForm, documentoForm, escalaForm, documentopdfForm
-from .models import Escala, Ruta, Nave
+from .models import Escala, Ruta, Nave, Documento, perfilUser
+from django.template.loader import render_to_string
+from xhtml2pdf import pisa
 
 # Create your views here.
 def helloWorld(request):
@@ -104,7 +106,36 @@ def upload_pdf(request, idscale, idrut):
         form = documentopdfForm()
         return render(request, './Documents/upload_pdf.html', {'form': form} )
 
+def view_pdf(request, idscale, idrut, iddoc):
+    documento = get_object_or_404(Documento, pk = iddoc)
+    return render(request, './Documents/view_document.html', {'documento': documento, 'idscal': idscale, 'idrut': idrut})
 
+def view_all(request, iduser):
+    user = get_object_or_404(perfilUser, pk = iduser)
+    if user.puerto:
+        return
+    else:
+        return 
+
+
+def download_to_pdf(request, iddoc):
+    documento = get_object_or_404(Documento, pk = iddoc)
+    html_string = render_to_string(
+        './Documents/view_document.html',
+        {'documento': documento}
+    )
+
+    html = render_to_string(
+        './Documents/document_pdf.html',
+        {'documento': documento}
+    )
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = (
+        f'attachment; filename="{documento.tipo}-{documento.pk}.pdf"'
+    )
+    pisa.CreatePDF(html, dest=response)
+    return response
 
 
     
