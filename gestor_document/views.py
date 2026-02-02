@@ -5,13 +5,33 @@ from .forms import billOfLading, viajeForm, documentoForm, escalaForm, documento
 from .models import Escala, Ruta, Nave, Documento, perfilUser
 from django.template.loader import render_to_string
 from xhtml2pdf import pisa
+from django.contrib.auth.views import LoginView
+from django.urls import reverse_lazy
+from django.contrib.auth.decorators import login_required, user_passes_test
+
+class CustomLoginView(LoginView):
+    template_name = 'login.html'
+
+    def get_success_url(self):
+        user = self.request.user
+
+        if user.groups.filter(name='navieros').exists():
+            return reverse_lazy('index')
+        else:
+            return reverse_lazy('all_docs')
+
 
 # Create your views here.
+@login_required
 def helloWorld(request):
     return render(request, 'index.html')
 
 #esta parte van los documentos, de momento es un ejemplo que puede extenderse al numero de documentos que se necesite
 #en este caso son 3, pero solo cree un form para funcionamiento
+def es_naviero(user):
+    return user.groups.filter(name='navieros').exists()
+
+@user_passes_test(es_naviero)
 def create_BOL(request, idscale, idrut):
     if request.method == 'GET':
         form = billOfLading()
@@ -36,6 +56,7 @@ def create_BOL(request, idscale, idrut):
           print(form.errors)
           return HttpResponse("fallo algo")
 
+@user_passes_test(es_naviero)
 def create_viajee(request):
     if request.method == 'POST':
         forma = viajeForm(request.POST)
@@ -57,6 +78,7 @@ def create_viajee(request):
             'form': form
         })
 
+@user_passes_test(es_naviero)
 def viaje_scale(request, id):
     if request.method == 'GET':
         scales = Escala.objects.filter(ruta=id)
@@ -69,6 +91,7 @@ def viaje_scale(request, id):
     else:
         return HttpResponse("en proceso")
 
+@user_passes_test(es_naviero)
 def create_scale(request, idrut):
     if request.method == 'POST':
         form = escalaForm(request.POST)
@@ -90,6 +113,7 @@ def create_scale(request, idrut):
         }
         return render(request, './Documents/create_scale.html', context)
 
+@user_passes_test(es_naviero)
 def upload_pdf(request, idscale, idrut):
     if request.method == 'POST':
         escala = get_object_or_404(Escala, pk = idscale)
@@ -106,10 +130,12 @@ def upload_pdf(request, idscale, idrut):
         form = documentopdfForm()
         return render(request, './Documents/upload_pdf.html', {'form': form} )
 
+@login_required
 def view_pdf(request, idscale, idrut, iddoc):
     documento = get_object_or_404(Documento, pk = iddoc)
     return render(request, './Documents/view_document.html', {'documento': documento, 'idscal': idscale, 'idrut': idrut})
 
+@login_required
 def view_all(request, iduser):
     user = get_object_or_404(perfilUser, pk = iduser)
     if user.puerto:
@@ -117,7 +143,7 @@ def view_all(request, iduser):
     else:
         return 
 
-
+@login_required
 def download_to_pdf(request, iddoc):
     documento = get_object_or_404(Documento, pk = iddoc)
     html_string = render_to_string(

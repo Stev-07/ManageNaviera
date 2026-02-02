@@ -1,0 +1,7 @@
+{% load crispy_forms_tags %}
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p}}
+  <button type="submit">Iniciar sesión</button>
+</form>
