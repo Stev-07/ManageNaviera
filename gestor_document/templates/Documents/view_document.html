@@ -1,11 +1,16 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="../../static/styles/styles2.css">
 </head>
+
 <body>
+    {% load auth_extras %}
     <div style="white-space: pre-wrap;">
         <P>tipo : {{documento.tipo}}</P>
         <p>Buque : {{documento.nombreBuque}}</p>
@@ -14,7 +19,12 @@
     </div>
     <div class="buttons_document">
         <a href="{% url 'download_to_pdf' documento.id %}">Descargar PDF</a>
-        <a href="#">volver</a>
+        {% if request.user|has_group:"navieros" %}
+        <div class="buttons_doc">
+            <a href="{% url 'view_all' %}?id={{idscal}}">volver</a>
+        </div>
+        {% endif %}
     </div>
 </body>
+
 </html>

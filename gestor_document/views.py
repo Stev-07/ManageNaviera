@@ -131,17 +131,23 @@ def upload_pdf(request, idscale, idrut):
         return render(request, './Documents/upload_pdf.html', {'form': form} )
 
 @login_required
-def view_pdf(request, idscale, idrut, iddoc):
+def view_pdf(request,idscale, idrut, iddoc):
     documento = get_object_or_404(Documento, pk = iddoc)
     return render(request, './Documents/view_document.html', {'documento': documento, 'idscal': idscale, 'idrut': idrut})
 
 @login_required
-def view_all(request, iduser):
-    user = get_object_or_404(perfilUser, pk = iduser)
-    if user.puerto:
-        return
+def view_all(request):
+    user = request.user
+    print(user)
+    if es_naviero:
+        idscale = request.GET.get("id")
+        escala = get_object_or_404(Escala, pk = idscale)
+        ruta = escala.ruta.id
+        documentos = Documento.objects.filter(escala = idscale)
+        return render(request, './Tracking/all_documents.html', {'documentos': documentos, 'ruta': ruta })
+    
     else:
-        return 
+        return HttpResponse("holi")
 
 @login_required
 def download_to_pdf(request, iddoc):

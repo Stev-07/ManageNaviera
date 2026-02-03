@@ -8,7 +8,6 @@
 
 <div class="contenedor">
     <h1>Viaje </h1>
-
     {% if scales %}
 
         <div class="viaje_scales">
@@ -26,10 +25,7 @@
                             <button class="btn_add_pdf" onclick="window.location.href='/upload_pdf/{{scale.id}}/{{idrut}}/'">
                                 subir pdf
                             </button>
-                            <button class="btn_view_document">
-                                ver documentos 
-                            </button>
-
+                            <a href="{% url 'view_all' %}?id={{scale.id}}" class="btn_view_document">ver documentos</a>
                         </div>
                     </div>
                 </div>
