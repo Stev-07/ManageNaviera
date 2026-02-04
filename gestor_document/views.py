@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse,JsonResponse
 from django.contrib import messages
 from .forms import billOfLading, viajeForm, documentoForm, escalaForm, documentopdfForm
-from .models import Escala, Ruta, Nave, Documento, perfilUser
+from .models import Escala, Ruta, Nave, Documento, perfilUser, Documento_pdf
 from django.template.loader import render_to_string
 from xhtml2pdf import pisa
 from django.contrib.auth.views import LoginView
@@ -145,7 +145,8 @@ def view_all(request):
         escala = get_object_or_404(Escala, pk = idscale)
         ruta = escala.ruta.id
         documentos = Documento.objects.filter(escala = idscale)
-        return render(request, './Tracking/all_documents.html', {'documentos': documentos, 'ruta': ruta })
+        documentos2 = Documento_pdf.objects.filter(escala = idscale)
+        return render(request, './Tracking/all_documents.html', {'documentos': documentos, 'ruta': ruta, 'documentos2': documentos2 })
     
     else:
         return HttpResponse("holi")

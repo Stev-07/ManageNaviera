@@ -1,27 +1,86 @@
 /* Contenedor del botón volver para darle espacio */
 .buttons_doc {
     margin-top: 20px;
-    text-align: center; /* Opcional: para centrarlo */
+    text-align: center;
+    /* Opcional: para centrarlo */
 }
 
 /* Estilo del enlace para que parezca botón */
 .buttons_doc a {
-    display: inline-block;       /* Importante: para que tome el padding */
-    text-decoration: none;       /* Quita el subrayado del link */
-    padding: 10px 15px;          /* Mismo padding que tus otros botones */
-    border-radius: 6px;          /* Mismo borde redondeado */
+    display: inline-block;
+    /* Importante: para que tome el padding */
+    text-decoration: none;
+    /* Quita el subrayado del link */
+    padding: 10px 15px;
+    /* Mismo padding que tus otros botones */
+    border-radius: 6px;
+    /* Mismo borde redondeado */
     font-size: 0.9rem;
     font-weight: 500;
-    color: #fff;                 /* Texto blanco */
-    background: #6c757d;         /* Color Gris (Neutro) */
+    color: #fff;
+    /* Texto blanco */
+    background: #6c757d;
+    /* Color Gris (Neutro) */
     transition: background 0.3s ease, transform 0.2s ease;
     cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Sutil sombra */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* Sutil sombra */
 }
 
 /* Efecto Hover igual a tus otros botones */
 .buttons_doc a:hover {
-    background: #5a6268;         /* Gris más oscuro al pasar el mouse */
-    transform: scale(1.05);      /* Efecto de crecimiento */
-    color: #fff;                 /* Asegura que el texto siga blanco */
+    background: #5a6268;
+    /* Gris más oscuro al pasar el mouse */
+    transform: scale(1.05);
+    /* Efecto de crecimiento */
+    color: #fff;
+    /* Asegura que el texto siga blanco */
+}
+
+body {
+    font-family: "Inter", Arial, sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 2rem;
+    color: #333;
+}
+
+h1 {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    color: #222;
+}
+
+.doc-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+}
+
+.doc-item {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.doc-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.doc-item a { 
+    text-decoration: none;
+    color: #0077cc;
+    font-weight: 500;
+    display: block;
+    margin-top: 0.5rem;
+    word-break: break-word;
+}
+
+.doc-link:hover {
+    color: #005fa3;
 }

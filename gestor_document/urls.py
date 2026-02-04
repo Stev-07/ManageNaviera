@@ -3,6 +3,8 @@ from django.urls import path
 from .views import CustomLoginView
 from . import views #esto importa los archivos de la app en la que nos encontramos
 from django.views.generic import RedirectView
+from django.conf import settings
+from django.conf.urls.static import static
 
 #esto es importante para mantener las urls en sus apps respectivas 
 urlpatterns = [
@@ -18,4 +20,4 @@ urlpatterns = [
     path('all_docs/', views.view_all, name='view_all'),
     path('pdf/<int:iddoc>/', views.download_to_pdf, name='download_to_pdf'),
     path('delete/<int:idrut>/', views.delete_rut, name='deleterut'),
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

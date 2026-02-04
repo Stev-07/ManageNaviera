@@ -10,13 +10,19 @@
 </head>
 
 <body>
+    <h1>Documentos:</h1>
     {% load auth_extras %}
-    <div class="container">
+    <div class="container doc-list">
         {% if request.user|has_group:"navieros" %}
 
         {% for doc in documentos %}
-        <div>
+        <div class="doc-item">
             <a href="{% url 'view_pdf' doc.escala.id doc.escala.ruta.id doc.id %}">{{doc.tipo}}-{{doc.id}} </a>
+        </div>
+        {% endfor %}
+        {% for docu in documentos2 %}
+        <div class="doc-item">
+            <a href="{{ docu.archivo.url }}" target="_blank"> {{docu.nombre}} </a>
         </div>
         {% endfor %}
 
