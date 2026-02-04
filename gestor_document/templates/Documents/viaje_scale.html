@@ -1,7 +1,9 @@
 {% extends 'layouts/navbar.html' %}
 {% load static %}
+
 <head>
     <link rel="stylesheet" href="../../static/styles/styles.css">
+
 </head>
 
 {% block content %}
@@ -10,40 +12,50 @@
     <h1>Viaje </h1>
     {% if scales %}
 
-        <div class="viaje_scales">
-            {% for scale in scales %}
-                <div class="escala" data-id="{{scale.id}}">
-                    <div class="data-escala">
-                        <div class="text-escala">
-                            <p>escala #{{scale.id}} <br></p>
-                            <p>destino: {{scale.puertoDestino}} <br></p>
-                        </div>
-                        <div class="buttons_escala">
-                            <button class="add_document" onclick="window.location.href='/create_bol/{{scale.id}}/{{idrut}}/'">
-                                añadir documento
-                            </button>
-                            <button class="btn_add_pdf" onclick="window.location.href='/upload_pdf/{{scale.id}}/{{idrut}}/'">
-                                subir pdf
-                            </button>
-                            <a href="{% url 'view_all' %}?id={{scale.id}}" class="btn_view_document">ver documentos</a>
-                        </div>
+    <div class="viaje_scales">
+        {% for scale in scales %}
+        <div class="escala" data-id="{{scale.id}}">
+            <div class="data-escala">
+                <div class="text-escala">
+                    <p>escala #{{scale.id}} <br></p>
+                    <p>destino: {{scale.puertoDestino}} <br></p>
+                </div>
+                <div class="buttons_escala">
+                    <button class="add_document" onclick="window.location.href='/create_bol/{{scale.id}}/{{idrut}}/'">
+                        añadir documento
+                    </button>
+                    <button class="btn_add_pdf" onclick="window.location.href='/upload_pdf/{{scale.id}}/{{idrut}}/'">
+                        subir pdf
+                    </button>
+                    <div class="btn_view_document">
+                        <a href="{% url 'view_all' %}?id={{scale.id}}">ver documentos</a>
                     </div>
                 </div>
-            {% endfor %}
+            </div>
         </div>
-    
+        {% endfor %}
+    </div>
+
     {% endif %}
-    
+
 
     <div class="btn_scale">
         <button onclick="window.location.href='/create_scale/{{idrut}}/'">
             añadir escala
         </button>
-        <button class="btn_save_ruta">
+        <button 
+        class="btn_save_ruta"
+         data-url="{% url 'index' %}" 
+         data-msg="guardado con exito"
+         onclick="confirmar(this.dataset.url, this.dataset.msg)">
             guardar y salir
         </button>
-        <button class="btn_cancel_ruta">
-            cancelar
+        <button 
+        class="btn_cancel_ruta"
+        data-url="{% url 'deleterut' idrut %}"
+        data-msg="eliminado con éxito"
+        onclick="confirmar(this.dataset.url, this.dataset.msg)">
+            cancelar y eliminar
         </button>
     </div>
 </div>

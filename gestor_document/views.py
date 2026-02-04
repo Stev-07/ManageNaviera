@@ -24,7 +24,8 @@ class CustomLoginView(LoginView):
 # Create your views here.
 @login_required
 def helloWorld(request):
-    return render(request, 'index.html')
+    user = request.user
+    return render(request, 'index.html', {'user': user})
 
 #esta parte van los documentos, de momento es un ejemplo que puede extenderse al numero de documentos que se necesite
 #en este caso son 3, pero solo cree un form para funcionamiento
@@ -89,7 +90,7 @@ def viaje_scale(request, id):
         print(context)
         return render(request, './Documents/viaje_scale.html', context)
     else:
-        return HttpResponse("en proceso")
+        return HttpResponse("algo fallo")
 
 @user_passes_test(es_naviero)
 def create_scale(request, idrut):
@@ -169,5 +170,8 @@ def download_to_pdf(request, iddoc):
     pisa.CreatePDF(html, dest=response)
     return response
 
-
+def delete_rut(request, idrut):
+    rut = get_object_or_404(Ruta, pk = idrut)
+    rut.delete()
+    return redirect('index')
     

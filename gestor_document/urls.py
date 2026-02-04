@@ -17,4 +17,5 @@ urlpatterns = [
     path('view_document/<int:idscale>/<int:idrut>/<int:iddoc>/', views.view_pdf, name='view_pdf'),
     path('all_docs/', views.view_all, name='view_all'),
     path('pdf/<int:iddoc>/', views.download_to_pdf, name='download_to_pdf'),
+    path('delete/<int:idrut>/', views.delete_rut, name='deleterut'),
 ]

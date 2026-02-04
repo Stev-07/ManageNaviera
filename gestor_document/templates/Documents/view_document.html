@@ -6,7 +6,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="../../static/styles/styles2.css">
+    <style>
+        /* Contenedor del botón volver para darle espacio */
+        .buttons_doc {
+            margin-top: 20px;
+            text-align: center;
+            /* Opcional: para centrarlo */
+        }
+
+        /* Estilo del enlace para que parezca botón */
+        .buttons_doc a {
+            display: inline-block;
+            /* Importante: para que tome el padding */
+            text-decoration: none;
+            /* Quita el subrayado del link */
+            padding: 10px 15px;
+            /* Mismo padding que tus otros botones */
+            border-radius: 6px;
+            /* Mismo borde redondeado */
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #fff;
+            /* Texto blanco */
+            background: #6c757d;
+            /* Color Gris (Neutro) */
+            transition: background 0.3s ease, transform 0.2s ease;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            /* Sutil sombra */
+        }
+
+        /* Efecto Hover igual a tus otros botones */
+        .buttons_doc a:hover {
+            background: #5a6268;
+            /* Gris más oscuro al pasar el mouse */
+            transform: scale(1.05);
+            /* Efecto de crecimiento */
+            color: #fff;
+            /* Asegura que el texto siga blanco */
+        }
+
+    </style>
 </head>
 
 <body>
@@ -17,11 +57,16 @@
         <p>estado : {{documento.infovendedor}}</p>
         <p>estado : {{documento.estado}}</p>
     </div>
-    <div class="buttons_document">
+    <div class="buttons_doc">
         <a href="{% url 'download_to_pdf' documento.id %}">Descargar PDF</a>
         {% if request.user|has_group:"navieros" %}
         <div class="buttons_doc">
             <a href="{% url 'view_all' %}?id={{idscal}}">volver</a>
+        </div>
+        {% endif %}
+        {% if request.user|has_group:"portuarios" %}
+        <div >
+            <a href="#">aprobe</a>
         </div>
         {% endif %}
     </div>
