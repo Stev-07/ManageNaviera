@@ -11,13 +11,19 @@
 
 <body>
     <div class="up-panel">
+        {% if request.user|has_group:"navieros" %}
         <h1 data-rut="{{idrut}}">Documentos: {% if is_scale %}{% else %} Ruta {{ruta}} {% endif %}</h1>
         <div class="btn_back_track">
             <a href="{% url 'track' %}">Volver</a>
         </div>
+        {% else %}
+        <div class="btn_back_track">
+            <a href="{% url 'index' %}">Volver</a>
+        </div>
+        {% endif %}
     </div>
     <div class="container doc-list">
-        {% if request.user|has_group:"navieros" %}
+
 
             {% if documentos %}
                 
@@ -29,7 +35,8 @@
                                 {% if doc.estado == 'pendiente' %}
                                 <form action="{% url 'aprobar_doc' doc.id %}" method="post">
                                     {% csrf_token %}
-                                    <input type="hidden" name="id_scale" value="valor del viaje enviado">
+                                    <input type="hidden" name="id" value={{doc.escala.id}}>
+                                    <input type="hidden" name="cod" value="txt">
                                     <button type="submit" class="btn_aprobe"> aprobar </button> 
                                 </form>
                                 {% else %}
@@ -54,7 +61,8 @@
                             {% if docu.estado == 'pendiente' %}
                             <form action="{% url 'aprobar_doc' docu.id %}" method="post">
                                 {% csrf_token %}
-                                <input type="hidden" name="id_scale" value="valor del viaje enviado">
+                                <input type="hidden" name="id" value="{{docu.escala.id}}">
+                                <input type="hidden" name="cod" value="pdf">
                                 <button type="submit" class="btn_aprobe"> aprobar </button> 
                             </form>
                             {% else %}
@@ -76,7 +84,6 @@
                 </div>
             {% endif %}
 
-        {% endif %}
 
 <!------------------------------------------------------------------------------------->
         {# si el ususari es de un puerto #}

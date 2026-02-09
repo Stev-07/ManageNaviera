@@ -7,6 +7,7 @@ from django.template.loader import render_to_string
 from xhtml2pdf import pisa
 from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
+from django.db.models import Q
 from django.contrib.auth.decorators import login_required, user_passes_test
 
 class CustomLoginView(LoginView):
@@ -146,14 +147,17 @@ def view_pdf(request,idscale, idrut, iddoc):
         documento = get_object_or_404(Documento, pk = iddoc)
         return render(request, './Documents/view_document.html', {'documento': documento, 'idscal': idscale, 'idrut': idrut, 'is_scale': False})
         
-
+def get_puerto(user):
+    perfil = user.perfiluser
+    puerto = perfil.puerto.id
+    return puerto
 
 #esta funcion se encarga de enviar los documentos de una ruta o escala, dependiendo del parametro recibido
 @login_required
 def view_all(request):
     user = request.user
     print(user)
-    if es_naviero:
+    if es_naviero(user):
         isscale = request.GET.get("isscale")
         print(isscale)
         if isscale == "1":
@@ -168,10 +172,12 @@ def view_all(request):
             idrut = request.GET.get("id")
             documentos = Documento.objects.filter(escala__ruta = idrut)
             documentos2 = Documento_pdf.objects.filter(escala__ruta = idrut)
-            return render(request, './Tracking/all_documents.html', {'documentos': documentos, 'ruta': idrut, 'documentos2': documentos2, 'is_scale': False})
-    
+            return render(request, './Tracking/all_documents.html', {'documentos': documentos, 'ruta': idrut, 'documentos2': documentos2, 'is_scale': False, 'es_naviero': True})    
     else:
-        return HttpResponse("holi")
+        esc = request.GET.get("id")
+        documentos = Documento.objects.filter(escala= esc)
+        documentospdf = Documento_pdf.objects.filter(escala = esc)
+        return render(request, './Tracking/all_documents.html', {'documentos': documentos, 'documentos2':documentospdf})
 
 @login_required
 def download_to_pdf(request, iddoc):
@@ -200,24 +206,55 @@ def delete_rut(request, idrut):
     return redirect('index')
 
 @login_required
-def aprobar_doc(request, id):
-    doc = get_object_or_404(Documento, pk = id)
-    doc.estado = 'revisado'
-    return 
+def aprobar_doc(request, iddoc):
+    esc = print(request.POST.get("id"))
+    cod = request.POST.get("cod")
+    if cod == "txt":
+        doc = get_object_or_404(Documento, pk = iddoc)
+        doc.estado = 'revisado'
+        doc.save()
+        msg = "documento revisado con exito"
+    else:
+        doc = get_object_or_404(Documento_pdf, pk = iddoc)
+        doc.estado = 'revisado'
+        doc.save()
+        msg = "documento revisado con exito"    
+    return redirect('track', {'msg': msg})
 
 @login_required
 def track(request):
+    user = request.user
     filtro = request.GET.get("doc-name")
-    if filtro:
-        try:
-            filtro = request.GET.get("doc-name")
-            doc = Documento.objects.get(id = filtro)
-            rutas = Ruta.objects.filter(id = doc.escala.ruta.id )
-            return render(request, './Tracking/embarkation.html', {'rutas': rutas})
-        except: 
-            msg = 'el registro buscado no existe'
-            return render(request, './Tracking/embarkation.html', {'msg' :msg})            
+    print(filtro)
+    if es_naviero(user):
+        if filtro:
+            try:
+                doc = Documento.objects.get(id = filtro)
+                rutas = Ruta.objects.filter(id = doc.escala.ruta.id )
+                return render(request, './Tracking/embarkation.html', {'rutas': rutas})
+            except: 
+                msg = 'el registro buscado no existe'
+                return render(request, './Tracking/embarkation.html', {'msg' :msg})            
+        else:
+            rutas = Ruta.objects.all()
+            return render(request, './Tracking/embarkation.html', {'rutas':rutas})
     else:
-        rutas = Ruta.objects.all()
-        return render(request, './Tracking/embarkation.html', {'rutas':rutas})
+        perfil = user.perfiluser
+        pto = perfil.puerto.id
+        if filtro:
+            try:
+                doc = Documento.objects.get(id = filtro)
+                if doc.escala.puertoDestino.id == pto:
+                    esc = Escala.objects.filter(id = doc.escala.puertoDestino.id)
+                    return render(request, './Tracking/embarkation.html', {'escalas': esc})
+                else:
+                    msg = "el registro no se encuentra disponible"
+                    return render(request, './Tracking/embarkation.html', {'msg':msg})
+            except:
+                msg = "el registro no se encuentra disponible"
+                return render(request, './Tracking/embarkation.html', {'msg':msg})
+        else:
+            escalas = Escala.objects.filter(Q(puertoDestino = pto) & (Q(documentos__estado = "pendiente")|Q(documentospdf__estado = "pendiente"))).distinct
+            return render(request, './Tracking/embarkation.html', {'escalas': escalas})
+            
         

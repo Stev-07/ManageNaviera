@@ -18,29 +18,29 @@
 
     </div>
 
-    {% if msg %}
-    <p id="msg-error" class="msg-error" hidden>{{msg}}</p>
-        <script>
-            element = document.getElementById("msg-error");
-            text = element.textContent;
-            showMessage(text, 1.8);
-        </script>
-    {% endif %}
-
 
     {% if request.user|has_group:"navieros" %}
     <div class="doc-list">
         {% for ruta in rutas %}
             <div class="doc-item" >
                 <a href="{% url 'view_all' %}?id={{ruta.id}}&isscale=0">{{ruta.id}}-fecha salida: {{ruta.fechaSalida}} nave: {{ruta.nave.nombre}}</a>
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
 
+    {% if request.user|has_group:"portuarios" %}
+    <div class="doc-list">
+        {% for esc in escalas %}
+            <div class="doc-item">
+                <a href="{% url 'view_all' %}?id={{esc.id}}">{{esc.ruta.nave.nombre}}-bandera: {{esc.ruta.nave.bandera}}</a>
             </div>
 
         {% endfor %}
+
     </div>
 
     {% endif %}
-
 </div>    
 
 
