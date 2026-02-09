@@ -14,18 +14,23 @@ class CustomLoginView(LoginView):
 
     def get_success_url(self):
         user = self.request.user
+        return reverse_lazy('index')
 
-        if user.groups.filter(name='navieros').exists():
-            return reverse_lazy('index')
-        else:
-            return reverse_lazy('all_docs')
 
 
 # Create your views here.
 @login_required
 def helloWorld(request):
     user = request.user
-    return render(request, 'index.html', {'user': user})
+    if es_naviero(user):
+        return render(request, 'index.html', {'user': user})
+    else:
+        perfil = user.perfiluser
+        print(perfil)
+        puerto = perfil.puerto.nombre
+        return render(request, 'index.html', {'user': user, 'puerto': puerto})
+
+
 
 #esta parte van los documentos, de momento es un ejemplo que puede extenderse al numero de documentos que se necesite
 #en este caso son 3, pero solo cree un form para funcionamiento
@@ -133,20 +138,37 @@ def upload_pdf(request, idscale, idrut):
 
 @login_required
 def view_pdf(request,idscale, idrut, iddoc):
-    documento = get_object_or_404(Documento, pk = iddoc)
-    return render(request, './Documents/view_document.html', {'documento': documento, 'idscal': idscale, 'idrut': idrut})
+    isscale = request.GET.get("isscale")
+    if isscale == "1":
+        documento = get_object_or_404(Documento, pk = iddoc)
+        return render(request, './Documents/view_document.html', {'documento': documento, 'idscal': idscale, 'idrut': idrut, 'is_scale': True})
+    else:
+        documento = get_object_or_404(Documento, pk = iddoc)
+        return render(request, './Documents/view_document.html', {'documento': documento, 'idscal': idscale, 'idrut': idrut, 'is_scale': False})
+        
 
+
+#esta funcion se encarga de enviar los documentos de una ruta o escala, dependiendo del parametro recibido
 @login_required
 def view_all(request):
     user = request.user
     print(user)
     if es_naviero:
-        idscale = request.GET.get("id")
-        escala = get_object_or_404(Escala, pk = idscale)
-        ruta = escala.ruta.id
-        documentos = Documento.objects.filter(escala = idscale)
-        documentos2 = Documento_pdf.objects.filter(escala = idscale)
-        return render(request, './Tracking/all_documents.html', {'documentos': documentos, 'ruta': ruta, 'documentos2': documentos2 })
+        isscale = request.GET.get("isscale")
+        print(isscale)
+        if isscale == "1":
+            idscale = request.GET.get("id")
+            escala = get_object_or_404(Escala, pk = idscale)
+            ruta = escala.ruta.id
+            documentos = Documento.objects.filter(escala = idscale)
+            documentos2 = Documento_pdf.objects.filter(escala = idscale)
+            #el contexto is_scale es unicamente para indicarle al template all documents que se le ha llamado desde esta view
+            return render(request, './Tracking/all_documents.html', {'documentos': documentos, 'ruta': ruta, 'documentos2': documentos2, 'is_scale': True })
+        else:
+            idrut = request.GET.get("id")
+            documentos = Documento.objects.filter(escala__ruta = idrut)
+            documentos2 = Documento_pdf.objects.filter(escala__ruta = idrut)
+            return render(request, './Tracking/all_documents.html', {'documentos': documentos, 'ruta': idrut, 'documentos2': documentos2, 'is_scale': False})
     
     else:
         return HttpResponse("holi")
@@ -171,8 +193,31 @@ def download_to_pdf(request, iddoc):
     pisa.CreatePDF(html, dest=response)
     return response
 
+@login_required
 def delete_rut(request, idrut):
     rut = get_object_or_404(Ruta, pk = idrut)
     rut.delete()
     return redirect('index')
-    
+
+@login_required
+def aprobar_doc(request, id):
+    doc = get_object_or_404(Documento, pk = id)
+    doc.estado = 'revisado'
+    return 
+
+@login_required
+def track(request):
+    filtro = request.GET.get("doc-name")
+    if filtro:
+        try:
+            filtro = request.GET.get("doc-name")
+            doc = Documento.objects.get(id = filtro)
+            rutas = Ruta.objects.filter(id = doc.escala.ruta.id )
+            return render(request, './Tracking/embarkation.html', {'rutas': rutas})
+        except: 
+            msg = 'el registro buscado no existe'
+            return render(request, './Tracking/embarkation.html', {'msg' :msg})            
+    else:
+        rutas = Ruta.objects.all()
+        return render(request, './Tracking/embarkation.html', {'rutas':rutas})
+        

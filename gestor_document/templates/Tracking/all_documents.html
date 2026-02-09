@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-{% load static %}
+{% load static auth_extras %}
 <html lang="en">
 
 <head>
@@ -10,26 +10,77 @@
 </head>
 
 <body>
-    <h1>Documentos:</h1>
-    {% load auth_extras %}
+    <div class="up-panel">
+        <h1 data-rut="{{idrut}}">Documentos: {% if is_scale %}{% else %} Ruta {{ruta}} {% endif %}</h1>
+        <div class="btn_back_track">
+            <a href="{% url 'track' %}">Volver</a>
+        </div>
+    </div>
     <div class="container doc-list">
         {% if request.user|has_group:"navieros" %}
 
-        {% for doc in documentos %}
-        <div class="doc-item">
-            <a href="{% url 'view_pdf' doc.escala.id doc.escala.ruta.id doc.id %}">{{doc.tipo}}-{{doc.id}} </a>
-        </div>
-        {% endfor %}
-        {% for docu in documentos2 %}
-        <div class="doc-item">
-            <a href="{{ docu.archivo.url }}" target="_blank"> {{docu.nombre}} </a>
-        </div>
-        {% endfor %}
+            {% if documentos %}
+                
+                {% for doc in documentos %}
 
-        <div class="buttons_doc">
-            <a href="{% url 'viaje_scale' ruta %}">volver</a>
-        </div>
+                        <div class="doc-item">
+                            <a href="{% url 'view_pdf' doc.escala.id doc.escala.ruta.id doc.id %}?isscale={{is_scale|yesno:'1,0'}}">{{doc.tipo}}-{{doc.id}} </a>
+                            {% if request.user|has_group:"portuarios" %}
+                                {% if doc.estado == 'pendiente' %}
+                                <form action="{% url 'aprobar_doc' doc.id %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="id_scale" value="valor del viaje enviado">
+                                    <button type="submit" class="btn_aprobe"> aprobar </button> 
+                                </form>
+                                {% else %}
+                                <p class="text_aprobe">APROBADO</p>
+                                {% endif %}                                
+                            {% else %}
+                                <p class="text_aprobe">{{doc.estado}}</p>
+                            {% endif %}
+                            
+                        </div>                  
 
+                {% endfor %}
+
+            {% endif %}
+
+            {% if documentos2 %}
+                
+                {% for docu in documentos2 %}
+                    <div class="doc-item pdf-file">
+                        <a href="{{ docu.archivo.url }}" target="_blank"> {{docu.nombre}} </a>
+                        {% if request.user|has_group:"portuarios" %}
+                            {% if docu.estado == 'pendiente' %}
+                            <form action="{% url 'aprobar_doc' docu.id %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="id_scale" value="valor del viaje enviado">
+                                <button type="submit" class="btn_aprobe"> aprobar </button> 
+                            </form>
+                            {% else %}
+                            <p class="text_aprobe">APROBADO</p>
+                            {% endif %}
+                            
+                        {% else %}
+                            <p class="text_aprobe">{{docu.estado}}</p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+            {% endif %}
+
+            {# si la revision es desde una escala puede volver a las escalas/ruta #}
+            {% if is_scale %}
+                <div class="buttons_doc">
+                    <a href="{% url 'viaje_scale' ruta %}">volver</a>
+                </div>
+            {% endif %}
+
+        {% endif %}
+
+<!------------------------------------------------------------------------------------->
+        {# si el ususari es de un puerto #}
+        {% if request.user|has_group:"portuarios" %}
         {% endif %}
     </div>
 </body>

@@ -5,6 +5,7 @@ from . import views #esto importa los archivos de la app en la que nos encontram
 from django.views.generic import RedirectView
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth.views import LogoutView
 
 #esto es importante para mantener las urls en sus apps respectivas 
 urlpatterns = [
@@ -20,4 +21,7 @@ urlpatterns = [
     path('all_docs/', views.view_all, name='view_all'),
     path('pdf/<int:iddoc>/', views.download_to_pdf, name='download_to_pdf'),
     path('delete/<int:idrut>/', views.delete_rut, name='deleterut'),
+    path('aprobar_doc/<int:iddoc>/', views.aprobar_doc, name='aprobar_doc'),
+    path('track/', views.track, name='track'),
+    path('logout/', LogoutView.as_view(), name='logout'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -6,5 +6,9 @@ ruta con sus respectivos respaldos físicos (documentos en PDF). A la hora de de
 en un puerto, el encargado del puerto podrá consultar los documentos, pudiendo confirmar
 la validez de los mismos
 
+areas que deben extenderse:
+1- el modelo de documento que se puede digitar fue puesto como ejemplo, a este le falta informacion de los documentos mencionados arriba, por lo que tambien en la busqueda no cumple por completo su funcion de momento
+
 Areas de mejora: 
-1.Datos olvidados (nombre de documento en modelo)
+
+

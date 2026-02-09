@@ -60,9 +60,16 @@
     <div class="buttons_doc">
         <a href="{% url 'download_to_pdf' documento.id %}">Descargar PDF</a>
         {% if request.user|has_group:"navieros" %}
-        <div class="buttons_doc">
-            <a href="{% url 'view_all' %}?id={{idscal}}">volver</a>
-        </div>
+            {% if is_scale %}
+                <div class="buttons_doc">
+                    <a href="{% url 'view_all' %}?id={{idscal}}&isscale=1">volver</a>
+                </div>
+            {% else %}
+                <div class="buttons_doc">
+                    <a href="{% url 'view_all' %}?id={{idrut}}&isscale=0">volver</a>
+                </div>
+
+            {% endif %}
         {% endif %}
         {% if request.user|has_group:"portuarios" %}
         <div >

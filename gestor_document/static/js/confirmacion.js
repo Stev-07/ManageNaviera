@@ -22,3 +22,11 @@ function confirmar(urlDestino, texto) {
     });
 }
 
+function showMessage(message, time) {
+    console.log("el mensaje es recibido")
+    const box = document.createElement("div");
+    box.className = "custom-message-box";
+    box.textContent = message;
+    document.body.appendChild(box);
+    setTimeout(() => { box.remove(); }, time*1000);
+}

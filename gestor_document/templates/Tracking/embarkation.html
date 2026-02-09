@@ -1,0 +1,47 @@
+{% extends 'layouts/navbar.html' %}
+{% load static auth_extras %}
+
+<head>
+    <link rel="stylesheet" href="../../static/styles/styles2.css">
+</head>
+
+{% block content %}
+<div class="container">
+    <div class="filtros">
+        <form action="" class="frm_filtro">
+            <input type="text" name="doc-name" placeholder="Buscar documentos: nombres" class="filtro-text">
+            <button type="submit" class="bnt_filtro">
+                filtrar
+            </button>
+
+        </form>
+
+    </div>
+
+    {% if msg %}
+    <p id="msg-error" class="msg-error" hidden>{{msg}}</p>
+        <script>
+            element = document.getElementById("msg-error");
+            text = element.textContent;
+            showMessage(text, 1.8);
+        </script>
+    {% endif %}
+
+
+    {% if request.user|has_group:"navieros" %}
+    <div class="doc-list">
+        {% for ruta in rutas %}
+            <div class="doc-item" >
+                <a href="{% url 'view_all' %}?id={{ruta.id}}&isscale=0">{{ruta.id}}-fecha salida: {{ruta.fechaSalida}} nave: {{ruta.nave.nombre}}</a>
+
+            </div>
+
+        {% endfor %}
+    </div>
+
+    {% endif %}
+
+</div>    
+
+
+{% endblock %}
