@@ -145,7 +145,7 @@ def view_pdf(request,idscale, idrut, iddoc):
         return render(request, './Documents/view_document.html', {'documento': documento, 'idscal': idscale, 'idrut': idrut, 'is_scale': True})
     else:
         documento = get_object_or_404(Documento, pk = iddoc)
-        return render(request, './Documents/view_document.html', {'documento': documento, 'idscal': idscale, 'idrut': idrut, 'is_scale': False})
+        return render(request, './Documents/view_document.html', {'documento': documento, 'idscal': idscale, 'idrut': idrut, 'is_scale': False, 'user': request.user, 'esc': documento.escala.id})
         
 def get_puerto(user):
     perfil = user.perfiluser
@@ -177,7 +177,7 @@ def view_all(request):
         esc = request.GET.get("id")
         documentos = Documento.objects.filter(escala= esc)
         documentospdf = Documento_pdf.objects.filter(escala = esc)
-        return render(request, './Tracking/all_documents.html', {'documentos': documentos, 'documentos2':documentospdf})
+        return render(request, './Tracking/all_documents.html', {'documentos': documentos, 'documentos2':documentospdf, 'esc':esc})
 
 @login_required
 def download_to_pdf(request, iddoc):

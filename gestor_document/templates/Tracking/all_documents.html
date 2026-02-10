@@ -12,10 +12,16 @@
 <body>
     <div class="up-panel">
         {% if request.user|has_group:"navieros" %}
-        <h1 data-rut="{{idrut}}">Documentos: {% if is_scale %}{% else %} Ruta {{ruta}} {% endif %}</h1>
-        <div class="btn_back_track">
-            <a href="{% url 'track' %}">Volver</a>
-        </div>
+            <h1 data-rut="{{idrut}}">Documentos: {% if is_scale %}
+                {% else %} 
+                Ruta {{ruta}} 
+                {% endif %}</h1>
+                {% if is_scale %}
+                {% else %}
+                    <div class="btn_back_track">
+                        <a href="{% url 'track' %}">Volver</a>
+                    </div>
+                {% endif %}
         {% else %}
         <div class="btn_back_track">
             <a href="{% url 'index' %}">Volver</a>
@@ -84,11 +90,6 @@
                 </div>
             {% endif %}
 
-
-<!------------------------------------------------------------------------------------->
-        {# si el ususari es de un puerto #}
-        {% if request.user|has_group:"portuarios" %}
-        {% endif %}
     </div>
 </body>
 
