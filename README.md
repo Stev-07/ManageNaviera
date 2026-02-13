@@ -10,5 +10,7 @@ areas que deben extenderse:
 1- el modelo de documento que se puede digitar fue puesto como ejemplo, a este le falta informacion de los documentos mencionados arriba, por lo que tambien en la busqueda no cumple por completo su funcion de momento
 
 Areas de mejora: 
+1- la ampliacion de los formularios para abarcar toda la información necesaria
 
+my first project in django - prueba
 
